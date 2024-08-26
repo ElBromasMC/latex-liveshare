@@ -1,22 +1,22 @@
 BUILD_DIR := ./build
 
-TEX_FILES := $(wildcard *.tex)
+TEX_FILES := $(shell find . -name '*.tex')
 
 # Compile all .tex files in the current directory
 .PHONY: all
-all: $(patsubst %.tex,$(BUILD_DIR)/%.pdf,$(TEX_FILES))
+all: $(patsubst %.tex,$(BUILD_DIR)/%.pdf,$(wildcard *.tex))
 
 # Latex build
-$(BUILD_DIR)/%.pdf: %.tex
-	mkdir -p $(dir $@)
-	lualatex -interaction=batchmode -output-directory=$(dir $@) $<
+$(BUILD_DIR)/%.pdf: $(TEX_FILES)
+	mkdir -p "$(dir $@)"
+	-lualatex -interaction=batchmode -output-directory="$(dir $@)" "$*.tex"
 
 # Live reload
 .PHONY: live
 live:
 	trap 'kill 0' EXIT; \
 	python -m http.server 8000 & \
-	watchexec --exts tex,sty make build/main.pdf & \
+	watchexec --exts tex,sty make & \
 	wait
 
 .PHONY: clean
