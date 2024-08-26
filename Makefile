@@ -9,13 +9,15 @@ all: $(patsubst %.tex,$(BUILD_DIR)/%.pdf,$(TEX_FILES))
 # Latex build
 $(BUILD_DIR)/%.pdf: %.tex
 	mkdir -p $(dir $@)
-	pdflatex -output-directory=$(BUILD_DIR) $<
+	lualatex -interaction=batchmode -output-directory=$(dir $@) $<
 
 # Live reload
 .PHONY: live
 live:
-	python -m http.server 8000 &
-	watchexec --exts tex,sty make
+	trap 'kill 0' EXIT; \
+	python -m http.server 8000 & \
+	watchexec --exts tex,sty make & \
+	wait
 
 .PHONY: clean
 clean:
@@ -24,3 +26,5 @@ clean:
 		exit 1; \
 	fi
 	rm -rf "$(BUILD_DIR)"
+
+.SECONDARY:
