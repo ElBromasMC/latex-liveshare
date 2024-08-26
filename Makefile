@@ -16,7 +16,7 @@ $(BUILD_DIR)/%.pdf: %.tex
 live:
 	trap 'kill 0' EXIT; \
 	python -m http.server 8000 & \
-	watchexec --exts tex,sty make & \
+	watchexec --exts tex,sty make build/main.pdf & \
 	wait
 
 .PHONY: clean
