@@ -9,7 +9,7 @@ all: $(patsubst %.tex,$(BUILD_DIR)/%.pdf,$(wildcard *.tex))
 # Latex build
 $(BUILD_DIR)/%.pdf: $(TEX_FILES)
 	mkdir -p "$(dir $@)"
-	-lualatex -interaction=batchmode -output-directory="$(dir $@)" "$*.tex"
+	-pdflatex -interaction=batchmode -output-directory="$(dir $@)" "$*.tex"
 
 # Live reload
 .PHONY: live
