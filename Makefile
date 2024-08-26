@@ -1,15 +1,15 @@
 BUILD_DIR := ./build
 
-TEX_FILES := $(wildcard *.tex)
+TEX_FILES := $(shell find . -name '*.tex')
 
 # Compile all .tex files in the current directory
 .PHONY: all
-all: $(patsubst %.tex,$(BUILD_DIR)/%.pdf,$(TEX_FILES))
+all: $(patsubst %.tex,$(BUILD_DIR)/%.pdf,$(wildcard *.tex))
 
 # Latex build
-$(BUILD_DIR)/%.pdf: %.tex
-	mkdir -p $(dir $@)
-	lualatex -interaction=batchmode -output-directory=$(dir $@) $<
+$(BUILD_DIR)/%.pdf: $(TEX_FILES)
+	mkdir -p "$(dir $@)"
+	-pdflatex -interaction=batchmode -output-directory="$(dir $@)" "$*.tex"
 
 # Live reload
 .PHONY: live
